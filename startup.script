@@ -1,5 +1,5 @@
 // Setting up all the hack.scripts and checking validity of port openers.
-var target = "silver-helix";
+var target = args[0];
 var maxopeners = 0;
 
 var portOpeners = [
@@ -125,3 +125,5 @@ for (var i = 0; i < purchasedServers.length; i++) {
 	scp("weakener.script",purchasedServers[i]);
 	exec("weakener.script", purchasedServers[i], (getServerMaxRam(purchasedServers[i]) / 8 * 1) / getScriptRam("weakener.script"), target);
 }
+
+spawn("spawner.script", 1, target)
