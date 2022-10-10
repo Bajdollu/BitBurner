@@ -1,4 +1,6 @@
 // Setting up all the hack.scripts and checking validity of port openers.
+// To start type run startup.script and the server u want to target, so run startup.script n00dles
+
 var target = args[0];
 var maxopeners = 0;
 
