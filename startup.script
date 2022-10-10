@@ -1,0 +1,127 @@
+// Setting up all the hack.scripts and checking validity of port openers.
+var target = "silver-helix";
+var maxopeners = 0;
+
+var portOpeners = [
+	"BruteSSH.exe",
+	"FTPCrack.exe",
+	"relaySMTP.exe",
+	"HTTPWorm.exe",
+	"SQLInject.exe"
+]
+
+var validOpeners = [
+
+]
+
+for (var i = 0; i < portOpeners.length; i++) {
+	if (fileExists(portOpeners[i])) {
+		maxopeners += 1;
+		validOpeners.push(true);
+	} else {
+		validOpeners.push(false);
+	}
+}
+
+// Server List
+var servers = [
+	"n00dles",
+	"foodnstuff",
+	"sigma-cosmetics",
+	"joesguns",
+	"hong-fang-tea",
+	"harakiri-sushi",
+	"iron-gym",
+	"zer0",
+	"nectar-net",
+	"CSEC",
+	"max-hardware",
+	"neo-net",
+	"crush-fitness",
+	"zb-institute",
+	"phantasy",
+	"computek",
+	"syscore",
+	"catalyst",
+	"omega-net",
+	"netlink",
+	"summit-uni",
+	"johnson-ortho",
+	"avmnite-02h",
+	"silver-helix",
+	"the-hub",
+	"rothman-uni",
+	"I.I.I.I"
+]
+
+
+// Checking if has root access, if not check how many ports need opening, and send it to the function to open ports
+// Then execute the hack, if user has root access then update the current hack.script and run.
+// This is done only if the user has enough hacking level.
+for (var i = 0; i < servers.length; i++) {
+	if (getServerRequiredHackingLevel(servers[i]) <= getHackingLevel()) {
+		if (hasRootAccess(servers[i]) == false) {
+			if (maxopeners >= getServerNumPortsRequired(servers[i])) {
+				OpenPorts(getServerNumPortsRequired(servers[i]), servers[i]);
+				nuke(servers[i]);
+				scp("hack.script",servers[i]);
+				exec("hack.script", servers[i], getServerMaxRam(servers[i]) / getScriptRam("hack.script"), target);
+			}
+		} else {
+			if (fileExists("hack.script", servers[i])) {
+				killall(servers[i]);
+				rm("hack.script", servers[i]);
+			}
+			scp("hack.script",servers[i]);
+			exec("hack.script", servers[i], getServerMaxRam(servers[i]) / getScriptRam("hack.script"), target);
+		}
+	} else {
+		print("Not high enough hacking level.");
+	}
+}
+
+// Port opener loop, checks how many is needed and opens ports only if I have enough port openers.
+function OpenPorts(loop, target) {
+	if (maxopeners >= loop) {
+		for (var i = 0; i < loop; i++) {
+			if (validOpeners[i] == true) {
+				if (i == 0) {
+					brutessh(target)
+				} else if (i == 1) {
+					ftpcrack(target);
+				} else if (i == 2) {
+					relaysmtp(target);
+				} else if (i == 3) {
+					httpworm(target);
+				} else if (i == 4) {
+					sqlinject(target);
+				} 
+			}
+		}
+	} else {
+		print("Not enough openers.");
+	}
+}
+
+// Setting up grower and weakener, for my servers.
+
+var purchasedServers = getPurchasedServers()
+
+print(purchasedServers)
+
+for (var i = 0; i < purchasedServers.length; i++) {
+	print(getServerMaxRam(purchasedServers[i]))
+	print(getScriptRam("weakener.script"))
+	print(getServerMaxRam(purchasedServers[i]) / 2 / getScriptRam("weakener.script"))
+	if (fileExists("grower.script", purchasedServers[i])) {
+		killall(purchasedServers[i]);
+		rm("grower.script", purchasedServers[i]);
+		rm("weakener.script", purchasedServers[i]);
+	}
+
+	scp("grower.script",purchasedServers[i]);
+	exec("grower.script", purchasedServers[i], (getServerMaxRam(purchasedServers[i]) / 8 * 7) / getScriptRam("grower.script"), target);
+	
+	scp("weakener.script",purchasedServers[i]);
+	exec("weakener.script", purchasedServers[i], (getServerMaxRam(purchasedServers[i]) / 8 * 1) / getScriptRam("weakener.script"), target);
+}
