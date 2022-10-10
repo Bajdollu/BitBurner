@@ -1,0 +1,4 @@
+var target = args[0]
+
+exec("grower.script", "home", (getServerMaxRam("home") / 8 * 7) / getScriptRam("grower.script"), target)
+spawn("weakener.script", (getServerMaxRam("home") / 8 * 1) / getScriptRam("weakener.script"), target)
